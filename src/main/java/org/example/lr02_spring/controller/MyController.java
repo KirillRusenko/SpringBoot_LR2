@@ -31,7 +31,9 @@ public class MyController {
     @PostMapping("/feedback")
     public ResponseEntity<Response> feedback(@Valid @RequestBody Request request, BindingResult bindingResult) {
 
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         log.info("request: {}", request);
+        log.info("Request took {} ms", Long.parseLong(String.valueOf(System.currentTimeMillis())) - Long.parseLong(request.getSystemTime()));
 
         Response response = Response.builder()
                 .uid(request.getUid())
