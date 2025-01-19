@@ -24,7 +24,7 @@ public class Request {
     @NotBlank()
     private String operationUid;
 
-    private String systemName;
+    private Systems systemName;
 
     @NotBlank()
     private String systemTime;
@@ -59,5 +59,19 @@ public class Request {
         if (operationUid.length() > 32) {
             throw new ValidationFailedException("operationUid не может быть длиннее 32 символов");
         }
+    }
+
+    public String toString() {
+        return "{" +
+                "uid='" + uid + '\'' +
+                ", operationUid='" + operationUid + '\'' +
+                ", systemName='" + systemName + '\'' +
+                ", systemTime='" + systemTime + '\'' +
+                ", source='" + source + '\'' +
+                ", communicationId" + communicationId +'\'' +
+                ", templateId=" + templateId +
+                ", productCode=" + productCode +
+                ", smsCode=" + smsCode +
+                "}";
     }
 }
