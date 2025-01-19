@@ -6,8 +6,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.lr02_spring.exception.UnsupportedCodeException;
 import org.example.lr02_spring.exception.ValidationFailedException;
 import org.example.lr02_spring.model.*;
+import org.example.lr02_spring.service.ModifyRequestService;
+import org.example.lr02_spring.service.ModifyResponseService;
+import org.example.lr02_spring.service.ModifySourceRequestService;
 import org.example.lr02_spring.service.ValidationService;
 import org.example.lr02_spring.util.DateTimeUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -23,9 +28,19 @@ import java.util.Date;
 public class MyController {
 
     private final ValidationService validationService;
+    private final ModifyResponseService modifyResponseService;
+    private final ModifyRequestService modifyRequestService;
+    private final ModifyRequestService modifySourceRequestService;
 
-    public MyController(ValidationService validationService) {
+    @Autowired
+    public MyController(ValidationService validationService,
+                        @Qualifier("ModifySystemTimeResponseService") ModifyResponseService modifyResponseService,
+                        @Qualifier("ModifyRequestSystemTimeService") ModifyRequestService modifyRequestService,
+                        @Qualifier("ModifySourceRequestService") ModifyRequestService modifySourceRequestService) {
         this.validationService = validationService;
+        this.modifyResponseService = modifyResponseService;
+        this.modifyRequestService = modifyRequestService;
+        this.modifySourceRequestService = modifySourceRequestService;
     }
 
     @PostMapping("/feedback")
@@ -76,6 +91,11 @@ public class MyController {
             log.error("unsupported uid: {}", response);
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(response, HttpStatus.OK);
+
+        modifyResponseService.modify(response);
+        modifyRequestService.modify(request);
+        modifySourceRequestService.modify(request);
+        log.info("request: {}", request);
+        return new ResponseEntity<>(modifyResponseService.modify(response), HttpStatus.OK);
     }
 }

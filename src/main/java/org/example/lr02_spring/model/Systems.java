@@ -6,7 +6,8 @@ public enum Systems {
 
     ERP("Enterprise Resource Planning"),
     CRM("Customer Relationship Management"),
-    WMS("Warehouse Management System");
+    WMS("Warehouse Management System"),
+    S1("Source1");
 
     private final String name;
 
